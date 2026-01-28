@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react'
-import { 
-  Chart as ChartJS, 
-  ArcElement, 
+import {
+  Chart as ChartJS,
+  ArcElement,
   CategoryScale,
   LinearScale,
   BarElement,
   PointElement,
   LineElement,
   Title,
-  Tooltip, 
-  Legend 
+  Tooltip,
+  Legend
 } from 'chart.js'
 import { Pie, Bar } from 'react-chartjs-2'
-import { 
-  Home, 
-  ArrowUpDown, 
-  TrendingUp, 
-  Target, 
+import {
+  Home,
+  ArrowUpDown,
+  TrendingUp,
+  Target,
   FileText,
   Plus,
   ArrowUpCircle,
@@ -31,14 +31,14 @@ import './index.css'
 
 // Register ChartJS components
 ChartJS.register(
-  ArcElement, 
+  ArcElement,
   CategoryScale,
   LinearScale,
   BarElement,
   PointElement,
   LineElement,
-  Title, 
-  Tooltip, 
+  Title,
+  Tooltip,
   Legend
 )
 
@@ -55,30 +55,12 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('pt-BR')
 }
 
-// Initial sample data
-const initialTransactions = [
-  { id: 1, type: 'income', description: 'Salário', category: 'Salário', amount: 8500, date: '2026-01-05' },
-  { id: 2, type: 'income', description: 'Freelance', category: 'Freelance', amount: 2500, date: '2026-01-10' },
-  { id: 3, type: 'expense', description: 'Aluguel', category: 'Moradia', amount: 2500, date: '2026-01-05' },
-  { id: 4, type: 'expense', description: 'Supermercado', category: 'Alimentação', amount: 890, date: '2026-01-08' },
-  { id: 5, type: 'expense', description: 'Combustível', category: 'Transporte', amount: 350, date: '2026-01-10' },
-  { id: 6, type: 'expense', description: 'Netflix', category: 'Lazer', amount: 55.90, date: '2026-01-12' },
-  { id: 7, type: 'expense', description: 'Farmácia', category: 'Saúde', amount: 180, date: '2026-01-15' },
-]
+// Initial sample data (empty for user to add their own)
+const initialTransactions = []
 
-const initialInvestments = [
-  { id: 1, name: 'CDB 120% CDI', type: 'Renda Fixa', amount: 10000, currentValue: 10450, return: 4.5 },
-  { id: 2, name: 'PETR4', type: 'Ações', amount: 3250, currentValue: 3875, return: 19.2 },
-  { id: 3, name: 'HGLG11', type: 'FIIs', amount: 8250, currentValue: 8615, return: 4.4 },
-  { id: 4, name: 'Tesouro IPCA+ 2029', type: 'Tesouro', amount: 3500, currentValue: 3680, return: 5.1 },
-  { id: 5, name: 'Bitcoin', type: 'Cripto', amount: 9000, currentValue: 10500, return: 16.7 },
-]
+const initialInvestments = []
 
-const initialGoals = [
-  { id: 1, name: 'Reserva de Emergência', target: 30000, current: 15000, deadline: '2026-06-30' },
-  { id: 2, name: 'Viagem Europa', target: 25000, current: 8500, deadline: '2026-12-31' },
-  { id: 3, name: 'Entrada Apartamento', target: 100000, current: 25000, deadline: '2028-12-31' },
-]
+const initialGoals = []
 
 const expenseCategories = ['Moradia', 'Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Vestuário', 'Outros']
 const incomeCategories = ['Salário', 'Freelance', 'Investimentos', 'Aluguel', 'Bônus', 'Outros']
@@ -117,15 +99,15 @@ function App() {
   const totalIncome = transactions
     .filter(t => t.type === 'income')
     .reduce((sum, t) => sum + t.amount, 0)
-  
+
   const totalExpense = transactions
     .filter(t => t.type === 'expense')
     .reduce((sum, t) => sum + t.amount, 0)
-  
+
   const balance = totalIncome - totalExpense
-  
+
   const totalInvestments = investments.reduce((sum, i) => sum + i.currentValue, 0)
-  
+
   const totalGoalsProgress = goals.reduce((sum, g) => sum + g.current, 0)
 
   // Add new transaction
@@ -270,7 +252,7 @@ function App() {
       {/* Main Content */}
       <main className="main-content">
         {currentPage === 'dashboard' && (
-          <Dashboard 
+          <Dashboard
             balance={balance}
             totalIncome={totalIncome}
             totalExpense={totalExpense}
@@ -281,31 +263,31 @@ function App() {
             pieChartOptions={pieChartOptions}
           />
         )}
-        
+
         {currentPage === 'transactions' && (
-          <Transactions 
+          <Transactions
             transactions={transactions}
             onAdd={() => openModal('transaction')}
           />
         )}
-        
+
         {currentPage === 'investments' && (
-          <Investments 
+          <Investments
             investments={investments}
             totalValue={totalInvestments}
             onAdd={() => openModal('investment')}
           />
         )}
-        
+
         {currentPage === 'goals' && (
-          <Goals 
+          <Goals
             goals={goals}
             onAdd={() => openModal('goal')}
           />
         )}
-        
+
         {currentPage === 'reports' && (
-          <Reports 
+          <Reports
             transactions={transactions}
             barChartData={barChartData}
             barChartOptions={barChartOptions}
@@ -320,8 +302,8 @@ function App() {
       {/* FAB Button */}
       {currentPage !== 'reports' && (
         <button className="fab" onClick={() => openModal(
-          currentPage === 'investments' ? 'investment' : 
-          currentPage === 'goals' ? 'goal' : 'transaction'
+          currentPage === 'investments' ? 'investment' :
+            currentPage === 'goals' ? 'goal' : 'transaction'
         )}>
           <Plus size={24} />
         </button>
@@ -329,35 +311,35 @@ function App() {
 
       {/* Bottom Navigation */}
       <nav className="bottom-nav">
-        <button 
+        <button
           className={`nav-item ${currentPage === 'dashboard' ? 'active' : ''}`}
           onClick={() => setCurrentPage('dashboard')}
         >
           <Home size={22} />
           <span>Início</span>
         </button>
-        <button 
+        <button
           className={`nav-item ${currentPage === 'transactions' ? 'active' : ''}`}
           onClick={() => setCurrentPage('transactions')}
         >
           <ArrowUpDown size={22} />
           <span>Transações</span>
         </button>
-        <button 
+        <button
           className={`nav-item ${currentPage === 'investments' ? 'active' : ''}`}
           onClick={() => setCurrentPage('investments')}
         >
           <TrendingUp size={22} />
           <span>Investir</span>
         </button>
-        <button 
+        <button
           className={`nav-item ${currentPage === 'goals' ? 'active' : ''}`}
           onClick={() => setCurrentPage('goals')}
         >
           <Target size={22} />
           <span>Metas</span>
         </button>
-        <button 
+        <button
           className={`nav-item ${currentPage === 'reports' ? 'active' : ''}`}
           onClick={() => setCurrentPage('reports')}
         >
@@ -368,7 +350,7 @@ function App() {
 
       {/* Modal */}
       {showModal && (
-        <Modal 
+        <Modal
           type={modalType}
           onClose={() => setShowModal(false)}
           onAddTransaction={addTransaction}
@@ -383,7 +365,7 @@ function App() {
 // Dashboard Component
 function Dashboard({ balance, totalIncome, totalExpense, totalInvestments, transactions, goals, pieChartData, pieChartOptions }) {
   const recentTransactions = transactions.slice(0, 5)
-  
+
   return (
     <>
       {/* Summary Cards */}
@@ -391,7 +373,7 @@ function Dashboard({ balance, totalIncome, totalExpense, totalInvestments, trans
         <div className="summary-card summary-card--full card">
           <div className="summary-card__content">
             <div className="summary-card__label">Saldo Total</div>
-            <div className="summary-card__value" style={{ 
+            <div className="summary-card__value" style={{
               fontSize: '2rem',
               color: balance >= 0 ? 'var(--success)' : 'var(--danger)'
             }}>
@@ -399,28 +381,28 @@ function Dashboard({ balance, totalIncome, totalExpense, totalInvestments, trans
             </div>
           </div>
         </div>
-        
+
         <div className="summary-card summary-card--income card">
           <div className="summary-card__content">
             <div className="summary-card__label">Receitas</div>
             <div className="summary-card__value">{formatCurrency(totalIncome)}</div>
           </div>
         </div>
-        
+
         <div className="summary-card summary-card--expense card">
           <div className="summary-card__content">
             <div className="summary-card__label">Despesas</div>
             <div className="summary-card__value">{formatCurrency(totalExpense)}</div>
           </div>
         </div>
-        
+
         <div className="summary-card summary-card--investment card">
           <div className="summary-card__content">
             <div className="summary-card__label">Investimentos</div>
             <div className="summary-card__value">{formatCurrency(totalInvestments)}</div>
           </div>
         </div>
-        
+
         <div className="summary-card summary-card--goal card">
           <div className="summary-card__content">
             <div className="summary-card__label">Economia</div>
@@ -458,7 +440,7 @@ function Dashboard({ balance, totalIncome, totalExpense, totalInvestments, trans
               </span>
             </div>
             <div className="progress-bar">
-              <div 
+              <div
                 className="progress-bar__fill progress-bar__fill--info"
                 style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }}
               />
@@ -503,7 +485,7 @@ function Dashboard({ balance, totalIncome, totalExpense, totalInvestments, trans
 // Transactions Component
 function Transactions({ transactions, onAdd }) {
   const [filter, setFilter] = useState('all')
-  
+
   const filteredTransactions = transactions.filter(t => {
     if (filter === 'all') return true
     return t.type === filter
@@ -512,21 +494,21 @@ function Transactions({ transactions, onAdd }) {
   return (
     <>
       <h2 style={{ marginBottom: 'var(--space-lg)' }}>Transações</h2>
-      
+
       <div className="tabs">
-        <button 
+        <button
           className={`tab ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
         >
           Todas
         </button>
-        <button 
+        <button
           className={`tab ${filter === 'income' ? 'active' : ''}`}
           onClick={() => setFilter('income')}
         >
           Receitas
         </button>
-        <button 
+        <button
           className={`tab ${filter === 'expense' ? 'active' : ''}`}
           onClick={() => setFilter('expense')}
         >
@@ -560,11 +542,11 @@ function Transactions({ transactions, onAdd }) {
 // Investments Component
 function Investments({ investments, totalValue, onAdd }) {
   const totalReturn = investments.reduce((sum, i) => sum + (i.currentValue - i.amount), 0)
-  
+
   return (
     <>
       <h2 style={{ marginBottom: 'var(--space-lg)' }}>Investimentos</h2>
-      
+
       <div className="summary-cards" style={{ marginBottom: 'var(--space-lg)' }}>
         <div className="summary-card summary-card--investment card">
           <div className="summary-card__content">
@@ -605,7 +587,7 @@ function Goals({ goals, onAdd }) {
   return (
     <>
       <h2 style={{ marginBottom: 'var(--space-lg)' }}>Metas Financeiras</h2>
-      
+
       {goals.map(goal => {
         const progress = (goal.current / goal.target) * 100
         return (
@@ -623,7 +605,7 @@ function Goals({ goals, onAdd }) {
               </span>
             </div>
             <div className="progress-bar">
-              <div 
+              <div
                 className={`progress-bar__fill ${progress >= 100 ? 'progress-bar__fill--success' : progress >= 70 ? 'progress-bar__fill--warning' : 'progress-bar__fill--info'}`}
                 style={{ width: `${Math.min(progress, 100)}%` }}
               />
@@ -645,11 +627,11 @@ function Goals({ goals, onAdd }) {
 // Reports Component  
 function Reports({ transactions, barChartData, barChartOptions, pieChartData, pieChartOptions, totalIncome, totalExpense }) {
   const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpense) / totalIncome * 100).toFixed(1) : 0
-  
+
   return (
     <>
       <h2 style={{ marginBottom: 'var(--space-lg)' }}>Relatórios</h2>
-      
+
       {/* Income vs Expense Chart */}
       <div className="chart-container">
         <h3 className="chart-title">Receitas vs Despesas</h3>
@@ -669,24 +651,24 @@ function Reports({ transactions, barChartData, barChartOptions, pieChartData, pi
       {/* Financial Indicators */}
       <div className="card" style={{ marginBottom: 'var(--space-lg)' }}>
         <h3 className="chart-title">Indicadores Financeiros</h3>
-        
+
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: 'var(--space-md) 0', borderBottom: '1px solid var(--border-color)' }}>
           <span style={{ color: 'var(--text-secondary)' }}>Taxa de Poupança</span>
           <span style={{ fontWeight: 600, color: savingsRate >= 20 ? 'var(--success)' : savingsRate >= 10 ? 'var(--warning)' : 'var(--danger)' }}>
             {savingsRate}%
           </span>
         </div>
-        
+
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: 'var(--space-md) 0', borderBottom: '1px solid var(--border-color)' }}>
           <span style={{ color: 'var(--text-secondary)' }}>Receita Total</span>
           <span style={{ fontWeight: 600, color: 'var(--success)' }}>{formatCurrency(totalIncome)}</span>
         </div>
-        
+
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: 'var(--space-md) 0', borderBottom: '1px solid var(--border-color)' }}>
           <span style={{ color: 'var(--text-secondary)' }}>Despesa Total</span>
           <span style={{ fontWeight: 600, color: 'var(--danger)' }}>{formatCurrency(totalExpense)}</span>
         </div>
-        
+
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: 'var(--space-md) 0' }}>
           <span style={{ color: 'var(--text-secondary)' }}>Economia</span>
           <span style={{ fontWeight: 600, color: 'var(--accent-primary)' }}>{formatCurrency(totalIncome - totalExpense)}</span>
@@ -718,7 +700,7 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    
+
     if (type === 'transaction') {
       onAddTransaction({
         type: transactionType,
@@ -751,11 +733,11 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
         <div className="modal-handle" />
-        
+
         <div className="modal-header">
           <h3 className="modal-title">
-            {type === 'transaction' ? 'Nova Transação' : 
-             type === 'goal' ? 'Nova Meta' : 'Novo Investimento'}
+            {type === 'transaction' ? 'Nova Transação' :
+              type === 'goal' ? 'Nova Meta' : 'Novo Investimento'}
           </h3>
           <button className="modal-close" onClick={onClose}>
             <X size={24} />
@@ -766,7 +748,7 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
           {type === 'transaction' && (
             <>
               <div className="type-selector">
-                <button 
+                <button
                   type="button"
                   className={`type-btn ${transactionType === 'income' ? 'active--income' : ''}`}
                   onClick={() => setTransactionType('income')}
@@ -774,7 +756,7 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
                   <ArrowUpCircle size={20} />
                   Receita
                 </button>
-                <button 
+                <button
                   type="button"
                   className={`type-btn ${transactionType === 'expense' ? 'active--expense' : ''}`}
                   onClick={() => setTransactionType('expense')}
@@ -786,10 +768,10 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
               <div className="form-group">
                 <label className="form-label">Descrição</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="description"
-                  className="form-input" 
+                  className="form-input"
                   placeholder="Ex: Salário, Aluguel..."
                   value={formData.description}
                   onChange={handleChange}
@@ -799,7 +781,7 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
               <div className="form-group">
                 <label className="form-label">Categoria</label>
-                <select 
+                <select
                   name="category"
                   className="form-select"
                   value={formData.category}
@@ -815,10 +797,10 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
               <div className="form-group">
                 <label className="form-label">Valor</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   name="amount"
-                  className="form-input" 
+                  className="form-input"
                   placeholder="0,00"
                   step="0.01"
                   min="0"
@@ -830,8 +812,8 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
               <div className="form-group">
                 <label className="form-label">Data</label>
-                <input 
-                  type="date" 
+                <input
+                  type="date"
                   name="date"
                   className="form-input"
                   value={formData.date}
@@ -846,10 +828,10 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
             <>
               <div className="form-group">
                 <label className="form-label">Nome da Meta</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="name"
-                  className="form-input" 
+                  className="form-input"
                   placeholder="Ex: Viagem, Carro novo..."
                   value={formData.name}
                   onChange={handleChange}
@@ -859,10 +841,10 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
               <div className="form-group">
                 <label className="form-label">Valor Alvo</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   name="target"
-                  className="form-input" 
+                  className="form-input"
                   placeholder="0,00"
                   step="0.01"
                   min="0"
@@ -874,10 +856,10 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
               <div className="form-group">
                 <label className="form-label">Valor Atual (opcional)</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   name="current"
-                  className="form-input" 
+                  className="form-input"
                   placeholder="0,00"
                   step="0.01"
                   min="0"
@@ -888,8 +870,8 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
               <div className="form-group">
                 <label className="form-label">Prazo</label>
-                <input 
-                  type="date" 
+                <input
+                  type="date"
                   name="deadline"
                   className="form-input"
                   value={formData.deadline}
@@ -904,10 +886,10 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
             <>
               <div className="form-group">
                 <label className="form-label">Nome do Ativo</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="name"
-                  className="form-input" 
+                  className="form-input"
                   placeholder="Ex: PETR4, CDB 120%..."
                   value={formData.name}
                   onChange={handleChange}
@@ -917,7 +899,7 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
               <div className="form-group">
                 <label className="form-label">Tipo</label>
-                <select 
+                <select
                   name="investmentType"
                   className="form-select"
                   value={formData.investmentType}
@@ -932,10 +914,10 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
               <div className="form-group">
                 <label className="form-label">Valor Investido</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   name="amount"
-                  className="form-input" 
+                  className="form-input"
                   placeholder="0,00"
                   step="0.01"
                   min="0"
@@ -947,10 +929,10 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
 
               <div className="form-group">
                 <label className="form-label">Valor Atual</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   name="currentValue"
-                  className="form-input" 
+                  className="form-input"
                   placeholder="0,00"
                   step="0.01"
                   min="0"
@@ -963,8 +945,8 @@ function Modal({ type, onClose, onAddTransaction, onAddGoal, onAddInvestment }) 
           )}
 
           <button type="submit" className="btn btn--primary btn--block">
-            {type === 'transaction' ? 'Adicionar Transação' : 
-             type === 'goal' ? 'Criar Meta' : 'Adicionar Investimento'}
+            {type === 'transaction' ? 'Adicionar Transação' :
+              type === 'goal' ? 'Criar Meta' : 'Adicionar Investimento'}
           </button>
         </form>
       </div>
